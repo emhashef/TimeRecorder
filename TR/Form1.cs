@@ -13,7 +13,7 @@ namespace TR
     public partial class Form1 : Form
     {
         int secc, idd;
-        DateTime d;
+        DateTime d;int settime;
          private System.Threading.Timer timer;
        // private System.Threading.Timer timer2;
         Form2 form2;
@@ -50,12 +50,13 @@ namespace TR
             //dataGridView1.DataSource = dataSet;
             //dataGridView1.DataMember = "TRTable";
             SQLiteCommand optioncmmd = sqLiteConnection.CreateCommand();
-            optioncmmd.CommandText = "select * from options order by id asc";
+            optioncmmd.CommandText = "select * from options";
             SQLiteDataReader optionsreader =  optioncmmd.ExecuteReader();
             optionsreader.Read();
-            TopMost = optionsreader.GetBoolean(2);
-            optionsreader.Read();
+            TopMost = optionsreader.GetBoolean(1);
+            
             ShowInTaskbar = optionsreader.GetBoolean(2);
+            settime = optionsreader.GetInt32(3);
             optionsreader.Close();
             
             SQLiteCommand sqlitecmd = sqLiteConnection.CreateCommand();

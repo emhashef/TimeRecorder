@@ -29,12 +29,12 @@ namespace TR
 
             sqLiteConnection.Open();
             SQLiteCommand optioncmmd = sqLiteConnection.CreateCommand();
-            optioncmmd.CommandText = "select * from options order by id asc";
+            optioncmmd.CommandText = "select * from options ";
             SQLiteDataReader optionsreader = optioncmmd.ExecuteReader();
             optionsreader.Read();
 
-            checkBox1.Checked = optionsreader.GetBoolean(2);
-            optionsreader.Read();
+            checkBox1.Checked = optionsreader.GetBoolean(1);
+            
             checkbox2.Checked = !optionsreader.GetBoolean(2);
             optionsreader.Close();
             sqLiteConnection.Close();
@@ -48,14 +48,14 @@ namespace TR
             sqLiteConnection.Open();
             SQLiteCommand optioncmmd = sqLiteConnection.CreateCommand();
             if (checkBox1.Checked)
-                optioncmmd.CommandText = "update options set value = 1 where id = 1";
+                optioncmmd.CommandText = "update options set topmost = 1 where id = 1";
             else
-                optioncmmd.CommandText = "update options set value = 0 where id = 1";
+                optioncmmd.CommandText = "update options set topmost = 0 where id = 1";
             optioncmmd.ExecuteNonQuery();
             if (checkbox2.Checked)
-                optioncmmd.CommandText = "update options set value = 0 where id = 2";
+                optioncmmd.CommandText = "update options set showintaskbar = 0 where id = 1";
             else
-                optioncmmd.CommandText = "update options set value = 1 where id = 2";
+                optioncmmd.CommandText = "update options set showintaskbar = 1 where id = 1";
             optioncmmd.ExecuteNonQuery();
 
             //SQLiteDataReader optionsreader = optioncmmd.ExecuteReader();
