@@ -68,5 +68,20 @@ namespace TR
             sqLiteConnection.Close();
             MessageBox.Show("setting saved !!!!\n you must restart app to see changes !!!!");
         }
+
+        private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
