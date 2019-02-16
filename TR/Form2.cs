@@ -34,7 +34,9 @@ namespace TR
             optionsreader.Read();
 
             checkBox1.Checked = optionsreader.GetBoolean(1);
-            
+
+            TimeSpan ts = TimeSpan.FromSeconds(optionsreader.GetInt32(3));
+            dateTimePicker1.Value = new DateTime(1900,1,1,ts.Hours,ts.Minutes,ts.Seconds);
             checkbox2.Checked = !optionsreader.GetBoolean(2);
             optionsreader.Close();
             sqLiteConnection.Close();
@@ -52,12 +54,15 @@ namespace TR
             else
                 optioncmmd.CommandText = "update options set topmost = 0 where id = 1";
             optioncmmd.ExecuteNonQuery();
+
             if (checkbox2.Checked)
                 optioncmmd.CommandText = "update options set showintaskbar = 0 where id = 1";
             else
                 optioncmmd.CommandText = "update options set showintaskbar = 1 where id = 1";
             optioncmmd.ExecuteNonQuery();
 
+            optioncmmd.CommandText = "update options set setcolortime = " + (dateTimePicker1.Value.Hour * 3600 + dateTimePicker1.Value.Minute * 60 + dateTimePicker1.Value.Second ).ToString() + " where id = 1";
+            optioncmmd.ExecuteNonQuery();
             //SQLiteDataReader optionsreader = optioncmmd.ExecuteReader();
             //optionsreader.Read();
 

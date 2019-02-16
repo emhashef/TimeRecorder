@@ -85,6 +85,8 @@ namespace TR
         delegate void StringArgReturningVoidDelegate(string text);
         private void thread1(object ob)
         {
+            if (settime <= secc)
+                label1.ForeColor = Color.Red;
 
             secc++;
             StringArgReturningVoidDelegate stringArgReturningVoidDelegate = new StringArgReturningVoidDelegate(set);
