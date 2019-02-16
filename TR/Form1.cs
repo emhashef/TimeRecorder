@@ -118,6 +118,8 @@ namespace TR
 
         private void label1_Click(object sender, EventArgs e)
         {
+            notifyIcon1.BalloonTipText = "Time recorder is running in background";
+            notifyIcon1.ShowBalloonTip(1700);
             Hide();
         }
 
