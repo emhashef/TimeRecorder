@@ -31,8 +31,9 @@ namespace TR
 
 
             notifyIcon1.ContextMenuStrip = contextMenuStrip1;
-            SQLiteConnection sqLiteConnection = new SQLiteConnection("DataSource =Time_record.db; Version=3;");
-
+         
+           SQLiteConnection sqLiteConnection = new SQLiteConnection($"DataSource ={Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\TimeRecorder\\Time_record.db; Version=3;");
+            
             sqLiteConnection.Open();
             SQLiteCommand tcmd = sqLiteConnection.CreateCommand();
             tcmd.CommandText = "create table if not exists TRTable (id INTEGER PRIMARY KEY UNIQUE NOT NULL, t INTEGER NOT NULL, d  DATE NOT NULL)";
@@ -107,7 +108,8 @@ namespace TR
         }
         private void save_sec()
         {
-            SQLiteConnection sqLiteConnection = new SQLiteConnection("DataSource =Time_record.db; Version=3; ");
+            SQLiteConnection sqLiteConnection = new SQLiteConnection($"DataSource ={Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\TimeRecorder\\Time_record.db; Version=3;");
+
 
             sqLiteConnection.Open();
 

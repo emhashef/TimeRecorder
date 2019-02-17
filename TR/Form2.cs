@@ -25,7 +25,8 @@ namespace TR
 
         private void Form2_Load(object sender, EventArgs e)
         {
-            SQLiteConnection sqLiteConnection = new SQLiteConnection("DataSource =Time_record.db; Version=3;");
+            SQLiteConnection sqLiteConnection = new SQLiteConnection($"DataSource ={Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\TimeRecorder\\Time_record.db; Version=3;");
+
 
             sqLiteConnection.Open();
             SQLiteCommand optioncmmd = sqLiteConnection.CreateCommand();
@@ -45,7 +46,8 @@ namespace TR
 
         private void button1_Click(object sender, EventArgs e)
         {
-            SQLiteConnection sqLiteConnection = new SQLiteConnection("DataSource =Time_record.db; Version=3;");
+            SQLiteConnection sqLiteConnection = new SQLiteConnection($"DataSource ={Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\TimeRecorder\\Time_record.db; Version=3;");
+
 
             sqLiteConnection.Open();
             SQLiteCommand optioncmmd = sqLiteConnection.CreateCommand();
