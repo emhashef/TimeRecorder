@@ -13,7 +13,7 @@ namespace TR
     public partial class Form1 : Form
     {
         int secc, idd;
-        DateTime d;int settime;
+        DateTime d;int settime;bool danger = false ;
          private System.Threading.Timer timer;
        // private System.Threading.Timer timer2;
         Form2 form2;
@@ -86,9 +86,11 @@ namespace TR
         delegate void StringArgReturningVoidDelegate(string text);
         private void thread1(object ob)
         {
-            if (settime <= secc)
+            if (settime <= secc && !danger)
+            {
                 label1.ForeColor = Color.Red;
-
+                danger = true;
+            }
             secc++;
             StringArgReturningVoidDelegate stringArgReturningVoidDelegate = new StringArgReturningVoidDelegate(set);
             Invoke(stringArgReturningVoidDelegate, TimeSpan.FromSeconds(secc).ToString());
