@@ -1,7 +1,7 @@
 # TimeRecorder
 this app record the time of your computer was on.
 you can download setup file in TR folder or in the release section:
-https://github.com/emhashef/TimeRecorder/blob/master/TR/Setup.exe
+https://github.com/emhashef/TimeRecorder/releases/download/v1.1/Setup.exe
 
 Tips:
  * you can click on TimeRecorder to hide it.
