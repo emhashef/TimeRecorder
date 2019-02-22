@@ -90,6 +90,7 @@ namespace TR
             {
                 label1.ForeColor = Color.Red;
                 danger = true;
+                Show();
             }
             secc++;
             StringArgReturningVoidDelegate stringArgReturningVoidDelegate = new StringArgReturningVoidDelegate(set);
