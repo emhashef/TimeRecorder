@@ -90,7 +90,9 @@ namespace TR
             {
                 label1.ForeColor = Color.Red;
                 danger = true;
-                Show();
+                StringArgReturningVoidDelegate fds = new StringArgReturningVoidDelegate(redable);
+                Invoke(fds, new object[] {null});
+                
             }
             secc++;
             StringArgReturningVoidDelegate stringArgReturningVoidDelegate = new StringArgReturningVoidDelegate(set);
@@ -103,7 +105,11 @@ namespace TR
         {
             
         }
+        private void redable (string st){
+            Show();
 
+
+        }
 
         private void form_closing(object sender, FormClosingEventArgs e)
         {
