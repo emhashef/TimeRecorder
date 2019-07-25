@@ -25,54 +25,27 @@ namespace TR
 
         private void Form2_Load(object sender, EventArgs e)
         {
-            SQLiteConnection sqLiteConnection = new SQLiteConnection($"DataSource ={Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\TimeRecorder\\Time_record.db; Version=3;");
+            
 
+            checkBox1.Checked = (bool)Properties.Settings.Default.top_most;
 
-            sqLiteConnection.Open();
-            SQLiteCommand optioncmmd = sqLiteConnection.CreateCommand();
-            optioncmmd.CommandText = "select * from options ";
-            SQLiteDataReader optionsreader = optioncmmd.ExecuteReader();
-            optionsreader.Read();
-
-            checkBox1.Checked = optionsreader.GetBoolean(1);
-
-            TimeSpan ts = TimeSpan.FromSeconds(optionsreader.GetInt32(3));
+            TimeSpan ts = TimeSpan.FromSeconds((long)Properties.Settings.Default.danger_time);
             dateTimePicker1.Value = new DateTime(1900,1,1,ts.Hours,ts.Minutes,ts.Seconds);
-            checkbox2.Checked = !optionsreader.GetBoolean(2);
-            optionsreader.Close();
-            sqLiteConnection.Close();
+            checkbox2.Checked = !(bool)Properties.Settings.Default.show_in_taskbar;
+            
             
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            SQLiteConnection sqLiteConnection = new SQLiteConnection($"DataSource ={Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\TimeRecorder\\Time_record.db; Version=3;");
+            
 
+            Properties.Settings.Default.top_most = checkBox1.Checked;
+            Properties.Settings.Default.show_in_taskbar = !checkbox2.Checked;
+            Properties.Settings.Default.danger_time = (long)(dateTimePicker1.Value.Hour * 3600 + dateTimePicker1.Value.Minute * 60 + dateTimePicker1.Value.Second);
+            Properties.Settings.Default.Save();
 
-            sqLiteConnection.Open();
-            SQLiteCommand optioncmmd = sqLiteConnection.CreateCommand();
-            if (checkBox1.Checked)
-                optioncmmd.CommandText = "update options set topmost = 1 where id = 1";
-            else
-                optioncmmd.CommandText = "update options set topmost = 0 where id = 1";
-            optioncmmd.ExecuteNonQuery();
-
-            if (checkbox2.Checked)
-                optioncmmd.CommandText = "update options set showintaskbar = 0 where id = 1";
-            else
-                optioncmmd.CommandText = "update options set showintaskbar = 1 where id = 1";
-            optioncmmd.ExecuteNonQuery();
-
-            optioncmmd.CommandText = "update options set setcolortime = " + (dateTimePicker1.Value.Hour * 3600 + dateTimePicker1.Value.Minute * 60 + dateTimePicker1.Value.Second ).ToString() + " where id = 1";
-            optioncmmd.ExecuteNonQuery();
-            //SQLiteDataReader optionsreader = optioncmmd.ExecuteReader();
-            //optionsreader.Read();
-
-            //checkBox1.Checked = optionsreader.GetBoolean(2);
-            //optionsreader.Read();
-            //checkbox2.Checked = !optionsreader.GetBoolean(2);
-            //optionsreader.Close();
-            sqLiteConnection.Close();
+        
             MessageBox.Show("setting saved !!!!\n you must restart app to see changes !!!!");
         }
 

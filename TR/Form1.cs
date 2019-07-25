@@ -12,10 +12,12 @@ namespace TR
 {
     public partial class Form1 : Form
     {
-        int secc, idd;
-        DateTime d;int settime;bool danger = false ;
-         private System.Threading.Timer timer;
-       // private System.Threading.Timer timer2;
+        long secc;
+        long idd;
+        DateTime d;
+        long settime;
+        bool danger = false ;
+        private System.Threading.Timer timer;
         Form2 form2;
         public Form1()
         {
@@ -32,56 +34,29 @@ namespace TR
 
             notifyIcon1.ContextMenuStrip = contextMenuStrip1;
          
-           SQLiteConnection sqLiteConnection = new SQLiteConnection($"DataSource ={Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\TimeRecorder\\Time_record.db; Version=3;");
+           
+            TopMost = (bool)Properties.Settings.Default["top_most"];
+            ShowInTaskbar = (bool)Properties.Settings.Default["show_in_taskbar"];
+            settime = (long)Properties.Settings.Default["danger_time"];
             
-            sqLiteConnection.Open();
-            SQLiteCommand tcmd = sqLiteConnection.CreateCommand();
-            tcmd.CommandText = "create table if not exists TRTable (id INTEGER PRIMARY KEY UNIQUE NOT NULL, t INTEGER NOT NULL, d  DATE NOT NULL)";
-            tcmd.ExecuteNonQuery();
-            tcmd.CommandText = "create table if not exists options (id INTEGER PRIMARY KEY UNIQUE NOT NULL, op_name string NOT NULL, value  boolean NOT NULL)";
-            tcmd.ExecuteNonQuery();
-            
-            //SQLiteDataAdapter sQLiteDataAdapter = new SQLiteDataAdapter("select id,time(t, 'unixepoch') as t,d from TRTable", "DataSource =Time_record.db; Version=3;");
-            //DataSet dataSet = new DataSet();
-            //sQLiteDataAdapter.FillSchema(dataSet, SchemaType.Source, "TRTable");
-            //dataSet.Tables[0].Columns[1].DataType = typeof(string);
-            //sQLiteDataAdapter.Fill(dataSet, "TRTable");
 
-            //dataGridView1.AutoGenerateColumns = true ;
-            //dataGridView1.DataSource = dataSet;
-            //dataGridView1.DataMember = "TRTable";
-            SQLiteCommand optioncmmd = sqLiteConnection.CreateCommand();
-            optioncmmd.CommandText = "select * from options";
-            SQLiteDataReader optionsreader =  optioncmmd.ExecuteReader();
-            optionsreader.Read();
-            TopMost = optionsreader.GetBoolean(1);
-            
-            ShowInTaskbar = optionsreader.GetBoolean(2);
-            settime = optionsreader.GetInt32(3);
-            optionsreader.Close();
-            
-            SQLiteCommand sqlitecmd = sqLiteConnection.CreateCommand();
-            sqlitecmd.CommandText = "SELECT t,id,d FROM TRTable ORDER BY id DESC LIMIT 1";
-            SQLiteDataReader sQLiteDataReader = sqlitecmd.ExecuteReader();
-            if(sQLiteDataReader.Read())
-                d = sQLiteDataReader.GetDateTime(2);
-            if(d.Date != DateTime.Now.Date)
+            DB db = new DB();
+            DataTable table = db.get($"SELECT * FROM TRTable Where d = '{DateTime.Now.Date.ToString("yyyy-MM-dd")}'");
+
+            if(table.Rows.Count == 0)
             {
-                sQLiteDataReader.Close();
-                sqlitecmd.CommandText = "insert into TRTable(t,d) VALUES (0, '" + DateTime.Now.Date.ToString("yyyy-MM-dd") + "' )";
-                sqlitecmd.ExecuteNonQuery();
-                sqlitecmd.CommandText = "SELECT t,id,d FROM TRTable ORDER BY id DESC LIMIT 1";
-                sQLiteDataReader = sqlitecmd.ExecuteReader();
-                sQLiteDataReader.Read();
+                db.run($"insert into TRTable(t,d) VALUES (0, '{DateTime.Now.Date.ToString("yyyy-MM-dd")}' )");
+                table = db.get("SELECT t,id,d FROM TRTable ORDER BY id DESC LIMIT 1");
+                
             }
-            secc = sQLiteDataReader.GetInt32(0);
-            idd = sQLiteDataReader.GetInt32(1);
-            sQLiteDataReader.Close();
+            secc = (long)table.Rows[0]["t"];
+            idd = (long)table.Rows[0]["id"];
+            
 
-            sqLiteConnection.Close();
+            
 
             timer = new System.Threading.Timer(new TimerCallback(thread1), null, 0, 1000);
-            //timer2 = new System.Threading.Timer(new TimerCallback(thread2), null, 30000, 30000);
+            
         }
         delegate void StringArgReturningVoidDelegate(string text);
         private void thread1(object ob)
@@ -117,17 +92,9 @@ namespace TR
         }
         private void save_sec()
         {
-            SQLiteConnection sqLiteConnection = new SQLiteConnection($"DataSource ={Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\TimeRecorder\\Time_record.db; Version=3;");
-
-
-            sqLiteConnection.Open();
-
-            SQLiteCommand sQLiteCommand = sqLiteConnection.CreateCommand();
-
-            sQLiteCommand.CommandText = "update TRTable set t = " + secc + " where id = " + idd;
-            sQLiteCommand.ExecuteNonQuery();
-
-            sqLiteConnection.Close();
+            DB db = new DB();
+            db.run("update TRTable set t = " + secc + " where id = " + idd);
+          
         } 
 
         private void label1_Click(object sender, EventArgs e)
